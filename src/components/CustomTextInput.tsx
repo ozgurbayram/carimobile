@@ -19,6 +19,7 @@ const CustomTextInput = React.forwardRef<TextInput,IProps>((props,ref)=>{
                 fontWeight:'600'
             }]}
             focusable
+            autoCapitalize="none"
             returnKeyType='next'
         />
     )

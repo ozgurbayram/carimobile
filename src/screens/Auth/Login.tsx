@@ -1,15 +1,14 @@
-import { ActivityIndicator, Button, StyleSheet, Text, TextInput, TextInputChangeEventData, View } from 'react-native'
+import { ActivityIndicator, StyleSheet, Text, TextInput, View } from 'react-native'
 import React, { useRef, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { AuthStackType } from '../../../types'
 import AnimatedPress from '../../components/AnimatedPress'
 import CustomTextInput from '../../components/CustomTextInput'
-import { NativeEvent } from 'react-native-reanimated/lib/types/lib/reanimated2/commonTypes'
 import { validateEmail, validatePassword } from '../../utils/validations'
-import Error from '../../components/Error'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import { useAuth } from '../../context/AuthContext'
+import { get_token } from '../../services/auth'
+import { useError } from '../../context/ErrorContext'
 
 const Login = () => {
     const navigation = useNavigation<NativeStackNavigationProp<AuthStackType>>()
@@ -23,37 +22,54 @@ const Login = () => {
 	const passwordRef = useRef<TextInput>()
 	// hooks
 	const {login} = useAuth()
+	const {createError} = useError()
 	// Methods
-	const _login = () =>{
-		// makes a login request
+	const _login = async() =>{
 		setLoading(true)
 		if(email && password){
-			if(validateEmail(email) && validatePassword(password)){
-				
-			}
-			setTimeout(() => {
-				login("dasds")
+			const isEmailValid = validateEmail(email)
+			const isPasswordValid = validatePassword(password)
+			if(isEmailValid && isPasswordValid){
+				const token = await get_token(email,password)
+				.then((res)=>{
+					console.log(res);
+				})
 				setLoading(false)
-			}, 3000);
+			}
+			if(!isEmailValid){
+				setLoading(false)
+				createError('Lütfen geçerli bir E-posta adresi giriniz')
+			}
+			if(!isPasswordValid){
+				setLoading(false)
+				createError('Lütfen geçerli bir şifre giriniz')
+			}
+		}else{
+			setLoading(false)
+			emailRef.current?.focus()
 		}
 	}
 
+	// handle input changes
 	const onEmailChange = (text:string) =>{setEmail(text)}
 	const onPasswordChange = (text:string)=>{setPassword(text)}
 	const navigateToRegister = () =>{navigation.navigate('Register')}
-
+	
+	
 	return (
 		<View style={styles.container}>
 			<CustomTextInput
 				ref={emailRef}
 				placeholder="E-posta"
-				keyboardType='email-address'
+				textContentType="emailAddress"
 				onChangeText={onEmailChange}
+				autoFocus	
 				onSubmitEditing={()=>{passwordRef.current?.focus()}}
 			/>
 			<CustomTextInput
 				ref={passwordRef}
 				placeholder="Şifre"
+				textContentType='password'
 				secureTextEntry
 				onChangeText={onPasswordChange}
 			/>
