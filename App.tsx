@@ -1,20 +1,18 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import 'react-native-gesture-handler'
+import { View, Text } from 'react-native'
+import React from 'react'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import Navigation from './src/screens/navigation'
+import AuthContextProvider from './src/context/AuthContext'
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+const App = () => {
+	return (
+		<GestureHandlerRootView style={{flex:1}}>
+			<AuthContextProvider>
+				<Navigation/>
+			</AuthContextProvider>
+		</GestureHandlerRootView>
+	)
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App
