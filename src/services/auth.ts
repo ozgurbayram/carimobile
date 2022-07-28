@@ -1,30 +1,29 @@
-import { instance } from "./api"
+import { AxiosResponse } from 'axios'
+import { instance } from './api'
 
 export const get_token = async(email:string,password:string) =>{
-    console.log("hello");
-    
-    await instance.post('/user/login',{
-        "email":email,
-        "password":password
-    },{
-        headers:{
-            "Content-Type":"application/json"
-        }
-    }).then((res)=>{
-        return res
-    }).catch((err)=>{
-        console.error(err);
-    })
+    let response = null
+    try {
+        response = await instance.post<AxiosResponse>('/user/login',{
+            email:email,
+            password:password
+        }) 
+        return response
+    } catch (error) {
+        return error.response
+    }
 }
 
 export const register_user =async (email:string,password:string,password_confirm:string) => {
-    await instance.post('/user/register',{
-        email:email,
-        password:password,
-        password_confirm:password_confirm
-    }).then((response)=>{
-        console.log(response.data,response.status);
-    }).catch((err)=>{
-        console.error(err);
-    })
+    let response = null
+    try {        
+        response = await instance.post('/user/register',{
+            email:email,
+            password:password,
+            password_confirm:password_confirm
+        })
+        return response
+    } catch (error) {
+        return error
+    } 
 }

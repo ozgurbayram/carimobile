@@ -1,16 +1,16 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { Text, StyleSheet } from 'react-native'
 import React from 'react'
-import Animated, { FadeIn, FadeInUp, FadeOut, FadeOutUp } from 'react-native-reanimated'
+import Animated, {  FadeInUp, FadeOutUp } from 'react-native-reanimated'
 
 interface Props {
     error:string
 }
 const Error = ({error}:Props) => {
-  return (
-    <Animated.View entering={FadeInUp} exiting={FadeOutUp} style={styles.container}>
-      <Text>{error}</Text>
-    </Animated.View>
-  )
+    return (
+        <Animated.View entering={FadeInUp} exiting={FadeOutUp} style={styles.container}>
+            <Text>{error}</Text>
+        </Animated.View>
+    )
 }
 const styles  = StyleSheet.create({
     container:{

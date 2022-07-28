@@ -3,10 +3,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StyleSheet, Text, View } from "react-native";
 import Animated, { FadeInRight, FadeOutRight } from "react-native-reanimated";
 
-const ErrorContext= createContext<{error:string|null,createError:(error:string)=>void,removeError:()=>void}>({
+const ErrorContext= createContext<{error:string|null,createError:(error:string)=>void}>({
     error:null,
     createError:()=>{},
-    removeError:()=>{}
 })
 
 
@@ -23,14 +22,8 @@ const ErrorContextProvider = ({children}:Props)=>{
         },2000);
         return ()=>clearTimeout(timer)
     }
-    const removeError =()=>{
-        setError(null)
-    }
-    useEffect(() => {
-        console.log(error);
-    }, [error])
     
-    const value = {error,createError,removeError}
+    const value = {error,createError}
 
     return (
         <ErrorContext.Provider value={value}>

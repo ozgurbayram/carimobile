@@ -1,9 +1,7 @@
-import { View, Text, TextInput, TextInputProps } from 'react-native'
+import {  TextInput, TextInputProps } from 'react-native'
 import React from 'react'
 
-interface IProps extends TextInputProps {
-
-}
+type IProps = TextInputProps
 
 const CustomTextInput = React.forwardRef<TextInput,IProps>((props,ref)=>{
     return(
@@ -16,7 +14,8 @@ const CustomTextInput = React.forwardRef<TextInput,IProps>((props,ref)=>{
                 padding:10,
                 borderRadius:10,
                 height:65,
-                fontWeight:'600'
+                fontWeight:'600',
+                elevation:1,
             }]}
             focusable
             autoCapitalize="none"

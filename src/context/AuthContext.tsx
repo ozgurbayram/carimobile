@@ -1,16 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
-type State = {
-    token:string|null
-    login:(token:string)=>void
-    logout:()=>void
-}
 
-
-const AuthContext = createContext<{token:string|null,login:(token:string)=>void,logout:()=>void}>({
-    login:()=>{},
+const AuthContext = createContext<{token:string|null,email:string|null,login:(token:string,email:string)=>void,logout:()=>void}>({
+    login:()=>null,
     token:null,
-    logout:()=>{}
+    email:null,
+    logout:()=>null
 })
 
 
@@ -19,20 +14,37 @@ interface Props {
 }
 const AuthContextProvider = ({children}:Props)=>{
     const [token, setToken] = useState<string|null>(null)
-    const login = (token:string)=>{
-        AsyncStorage.setItem('token',token)
+    const [email, setEmail] = useState<string|null>(null)
+    const login = async(token:string,email:string)=>{
+        await AsyncStorage.setItem('token',token)
+        await AsyncStorage.setItem('email',email)
         setToken(token)
+        setEmail(email)
     }
-    const logout = ()=>{
-        AsyncStorage.removeItem('token')
+    const logout = async()=>{
+        await AsyncStorage.removeItem('token')
+        await AsyncStorage.removeItem('email')
         setToken(null)
+        setEmail(null)
+    }  
+    const getExistUser = async()=>{
+        const token = await AsyncStorage.getItem('token')
+        const email = await AsyncStorage.getItem('email')
+        if(token && email){
+            setToken(token)
+            setEmail(email)
+        }
     }
+    useEffect(() => {
+        getExistUser()
+    }, [])
     
     return (
         <AuthContext.Provider value={{
-                login:login,
-                logout:logout,
-                token:token
+            login:login,
+            logout:logout,
+            token:token,
+            email:email
         }}>
             {children}
         </AuthContext.Provider>

@@ -1,6 +1,6 @@
-import { Pressable, PressableProps, StyleProp, StyleSheet, StyleSheetProperties, Text, View, ViewStyle } from 'react-native'
+import { Pressable, PressableProps, ViewStyle } from 'react-native'
 import React, { ReactNode } from 'react'
-import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated'
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 interface Props extends PressableProps {
     children:ReactNode
@@ -29,7 +29,7 @@ const AnimatedPress = ({
             onPress={onPress}
             onPressIn={onPressIn}
             onPressOut={onPressOut}
-            style={[style,animatedStyle]}
+            style={[animatedStyle,style]}
         >
             {children}
         </AnimatedPressable>
