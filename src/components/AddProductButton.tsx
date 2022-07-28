@@ -13,20 +13,14 @@ const AddProductButton = () => {
 
     return (
         <AnimatedPress style={styles.button} onPress={navigateToAddProductPage}>
-            <Ionicons name='add' size={28} color={"#fff"}/>
+            <Ionicons name='add' size={32} color="#333"/>
         </AnimatedPress>
     )
 }
 
 const styles = StyleSheet.create({
     button:{
-        position:'absolute',
-        bottom:30,
-        right:30,
-        height:65,
-        width:65,
-        borderRadius:100,
-        backgroundColor:'#333',
+        alignSelf:'center',
         alignItems:'center',
         justifyContent:'center'
     }
