@@ -6,6 +6,7 @@ import AuthContextProvider from './src/context/AuthContext'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import ErrorContextProvider from './src/context/ErrorContext'
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet'
+import ProductContextProvider from './src/context/ProductContext'
 
 const App = () => {
     return (
@@ -14,7 +15,9 @@ const App = () => {
                 <SafeAreaProvider style={{flex:1}}>
                     <ErrorContextProvider>
                         <AuthContextProvider>
-                            <Navigation/>
+                            <ProductContextProvider>
+                                <Navigation/>
+                            </ProductContextProvider>
                         </AuthContextProvider>
                     </ErrorContextProvider>
                 </SafeAreaProvider>

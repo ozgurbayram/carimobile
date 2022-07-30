@@ -1,4 +1,4 @@
-import { Ionicons } from '@expo/vector-icons'
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
 import React from 'react'
 import { Alert, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -23,6 +23,9 @@ const HomeHeader = () => {
         <SafeAreaView>
             <View style={styles.container}>
                 <View style={styles.left}>
+                    <AnimatedPress onPress={askForLogout}>
+                        <MaterialCommunityIcons name='logout' size={28} color="#333"/>
+                    </AnimatedPress>
                 </View>
                 <View>
                     <AddProductButton/>

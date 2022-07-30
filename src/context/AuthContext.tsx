@@ -1,5 +1,5 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
 const AuthContext = createContext<{token:string|null,email:string|null,login:(token:string,email:string)=>void,logout:()=>void}>({
     login:()=>null,
@@ -30,7 +30,7 @@ const AuthContextProvider = ({children}:Props)=>{
     const getExistUser = async()=>{
         const token = await AsyncStorage.getItem('token')
         const email = await AsyncStorage.getItem('email')
-        if(token && email){
+        if(token && email) {
             setToken(token)
             setEmail(email)
         }

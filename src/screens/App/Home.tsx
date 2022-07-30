@@ -1,34 +1,30 @@
-import { Button, FlatList, ListRenderItem, StyleSheet, Text, View} from 'react-native'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import AddProductButton from '../../components/AddProductButton'
-import { useAuth } from '../../context/AuthContext'
-import { instance } from '../../services/api'
-import { useIsFocused, useNavigation } from '@react-navigation/native'
-import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { AppStackType } from '../../../types'
+import { FlatList, StyleSheet, Text, View} from 'react-native'
+import React, { useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {AnimatedPress, ProductComponent,ProductListHeader} from '../../components/'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import CustomBackdrop from '../../components/SheetBackdrop'
+import { useProducts } from '../../context/ProductContext'
+import { getProducts } from '../../services/product'
+import { AxiosResponse } from 'axios'
+import LoadingComponent from '../../components/LoadingComponent'
 
 const Home = () => {
-    const isFocuesed = useIsFocused()
-    const {token} = useAuth()
-    const [products, setProducts] = useState()
-    const getProducts = async()=>{
-        const products = await instance.get('/product/list',{
-            headers:{
-                'Authorization':`Bearer ${token}`
-            }
-        }).then((res)=>{return res.data})
-        console.log(products);
-        setProducts(products['products'])
-        return products
+    const {productState,productDispatch} = useProducts()
+    const {products} = productState
+    const [isFetching, setIsFetching] = useState<boolean>(false)
+    const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+    const fetchProducts = async()=>{
+        setIsFetching(true)
+        const response:AxiosResponse = await getProducts()
+        if(response.status==200) {
+            productDispatch({type:'SET_PRODUCTS',products:response.data['products']})
+        }
+        setIsFetching(false)
     }
     useEffect(() => {
-        getProducts()
-    }, [isFocuesed])
-    const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-
+        fetchProducts()
+    }, [])
+    
     // variables
     const snapPoints = useMemo(() => ['25%', '50%'], []);
 
@@ -49,6 +45,8 @@ const Home = () => {
                     renderItem={(props)=>(<ProductComponent {...props}/>)}
                     ListHeaderComponent={()=>(<ProductListHeader onSelect={handlePresentModalPress}/>)}
                     stickyHeaderIndices={[0]}
+                    onRefresh={fetchProducts}
+                    refreshing={isFetching}
                 />
             )}
             <BottomSheetModal
@@ -59,7 +57,6 @@ const Home = () => {
                 onChange={handleSheetChanges}
             >
                 <View style={styles.contentContainer}>
-                
                     <AnimatedPress style={styles.selectButton}>
                         <Text>İsim</Text>
                     </AnimatedPress>

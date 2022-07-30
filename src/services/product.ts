@@ -20,3 +20,18 @@ export const create_product = async (productName:string,productPrice:number,barc
         return error.response
     }
 }
+
+export const getProducts = async()=>{
+    let response = null
+    const token = await AsyncStorage.getItem('token')
+    try {
+        response = await instance.get('/product/list',{
+            headers:{
+                'Authorization':`Bearer ${token}`
+            }
+        })
+        return response
+    } catch (error) {
+        return error.response
+    }
+}

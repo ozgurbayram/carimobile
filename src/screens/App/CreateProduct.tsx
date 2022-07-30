@@ -12,6 +12,8 @@ import { create_product } from '../../services/product'
 import { allowedBarCodes } from '../../constants/barcodeTypes'
 import { validateBarcode } from '../../utils/validations'
 import { AxiosResponse } from 'axios'
+import { useProducts } from '../../context/ProductContext'
+import LoadingComponent from '../../components/LoadingComponent'
 const CreateProduct = () => {
     const navigation = useNavigation<NativeStackNavigationProp<AppStackType>>()
     // states
@@ -45,13 +47,15 @@ const CreateProduct = () => {
             setCameraOpen(true)
         }
     }
-
+    const {productDispatch} = useProducts()
     const createProduct = async()=>{
         setLoading(true)
         if(barcode && productName && productPrice) {
             if(validateBarcode(barcode.toString())) {
                 const response:AxiosResponse = await create_product(productName,parseInt(productPrice),barcode)
                 if(response.status==200) {
+                    console.log(response.data);
+                    productDispatch({type:'ADD_PRODUCT',product:response.data['product']})
                     navigation.navigate('Home')
                 }
                 if(response.status==400) {
@@ -122,9 +126,7 @@ const CreateProduct = () => {
                 </Modal>
             )}
             {loading&&(
-                <Modal animationType='fade' statusBarTranslucent>
-                    <ActivityIndicator size="large" color="#333"/>
-                </Modal>
+                <LoadingComponent/>
             )}
         </SafeAreaView>
     )

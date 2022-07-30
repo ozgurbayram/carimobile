@@ -1,7 +1,7 @@
-import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { StyleSheet, Text, View } from "react-native";
-import Animated, { FadeInRight, FadeOutRight } from "react-native-reanimated";
+import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { StyleSheet, Text, View } from 'react-native';
+import Animated, { FadeInRight, FadeOutRight } from 'react-native-reanimated';
 
 const ErrorContext= createContext<{error:string|null,createError:(error:string)=>void}>({
     error:null,
