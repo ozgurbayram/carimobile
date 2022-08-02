@@ -1,12 +1,27 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { AppStackType } from '../../types'
 import Home from '../screens/App/Home'
 import CreateProduct from '../screens/App/CreateProduct'
 import HomeHeader from '../components/HomeHeader'
+import SearchProduct from '../screens/App/SearchProduct'
+import Basket from '../screens/App/Basket'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useBasket } from '../context/BasketContext'
 const AppStack = createNativeStackNavigator<AppStackType>()
 
 const AppNavigation = () => {
+    const {basketDispatch} = useBasket()
+    const getBasket= async()=>{
+        const basket = await AsyncStorage.getItem('basket')
+        if(basket!=undefined) {
+            basketDispatch({type:'SET_BASKET',products:JSON.parse(basket)})
+        }
+    }
+    useEffect(() => {
+        getBasket()
+    }, [])
+       
     return (
         <AppStack.Navigator
             screenOptions={{
@@ -27,6 +42,8 @@ const AppNavigation = () => {
                 }}
             />
             <AppStack.Screen name='CreateProduct' component={CreateProduct}/>
+            <AppStack.Screen name='SearchProduct' component={SearchProduct}/>
+            <AppStack.Screen name='Basket' component={Basket}/> 
         </AppStack.Navigator>
     )
 }

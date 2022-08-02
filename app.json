@@ -22,14 +22,19 @@
       "supportsTablet": true
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      },
-      "softwareKeyboardLayoutMode": "pan"
+		"adaptiveIcon": {
+			"foregroundImage": "./assets/adaptive-icon.png",
+			"backgroundColor": "#FFFFFF"
+		},
+		"softwareKeyboardLayoutMode": "pan",
     },
+	"androidNavigationBar": {
+		"visible":"true",
+		"barStyle":"dark-content",
+		"backgroundColor": "#FFFFFF"
+	},
     "web": {
-      "favicon": "./assets/favicon.png"
+		"favicon": "./assets/favicon.png"
     },
     "plugins": [
       [

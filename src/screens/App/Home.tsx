@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, Text, View} from 'react-native'
+import { FlatList, ListRenderItemInfo, StyleSheet, Text, View} from 'react-native'
 import React, { useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {AnimatedPress, ProductComponent,ProductListHeader} from '../../components/'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
@@ -6,7 +6,7 @@ import CustomBackdrop from '../../components/SheetBackdrop'
 import { useProducts } from '../../context/ProductContext'
 import { getProducts } from '../../services/product'
 import { AxiosResponse } from 'axios'
-import LoadingComponent from '../../components/LoadingComponent'
+import { Product } from '../../../types'
 
 const Home = () => {
     const {productState,productDispatch} = useProducts()
@@ -24,7 +24,29 @@ const Home = () => {
     useEffect(() => {
         fetchProducts()
     }, [])
-    
+
+    const sortByName = () =>{
+        const sortedList = products?.sort((a,b)=>a.name.localeCompare(b.name))
+        if(sortedList!=undefined) {
+            productDispatch({type:'SET_PRODUCTS',products:sortedList})
+            
+        }
+        bottomSheetModalRef.current?.close()
+    }
+    const sortByBarcode= ()=>{
+        const sortedList = products?.sort((a,b)=>a.barcode.localeCompare(b.barcode))
+        if(sortedList!=undefined) {
+            productDispatch({type:'SET_PRODUCTS',products:sortedList}) 
+        }
+        bottomSheetModalRef.current?.close()
+    }
+    const sortByPrice=()=>{
+        const sortedList = products?.sort((a,b)=>a.price-b.price)
+        if(sortedList!=undefined) {
+            productDispatch({type:'SET_PRODUCTS',products:sortedList})
+        }
+        bottomSheetModalRef.current?.close()
+    }
     // variables
     const snapPoints = useMemo(() => ['25%', '50%'], []);
 
@@ -32,17 +54,21 @@ const Home = () => {
     const handlePresentModalPress = useCallback(() => {
         bottomSheetModalRef.current?.present();
     }, []);
-    const handleSheetChanges = useCallback((index: number) => {
-        console.log('handleSheetChanges', index);
-    }, []);
 
-
+    const _renderItem = ({item}:ListRenderItemInfo<Product>)=>{
+        return (
+            <View>
+                <ProductComponent {...item}/>
+            </View>
+        )
+    }
     return ( 
         <View style={{flex:1,backgroundColor:'#fff'}}>
+           
             {products&&(
                 <FlatList
                     data={products}
-                    renderItem={(props)=>(<ProductComponent {...props}/>)}
+                    renderItem={_renderItem}
                     ListHeaderComponent={()=>(<ProductListHeader onSelect={handlePresentModalPress}/>)}
                     stickyHeaderIndices={[0]}
                     onRefresh={fetchProducts}
@@ -54,16 +80,15 @@ const Home = () => {
                 index={1}
                 snapPoints={snapPoints}
                 backdropComponent={CustomBackdrop}
-                onChange={handleSheetChanges}
             >
                 <View style={styles.contentContainer}>
-                    <AnimatedPress style={styles.selectButton}>
+                    <AnimatedPress style={styles.selectButton} onPress={sortByName}>
                         <Text>İsim</Text>
                     </AnimatedPress>
-                    <AnimatedPress style={styles.selectButton}>
+                    <AnimatedPress style={styles.selectButton} onPress={sortByBarcode}>
                         <Text>Barkod</Text>
                     </AnimatedPress>
-                    <AnimatedPress style={styles.selectButton}>
+                    <AnimatedPress style={styles.selectButton} onPress={sortByPrice}>
                         <Text>Fiyat</Text>
                     </AnimatedPress>
                 </View>

@@ -19,6 +19,7 @@
         "indent":["error",4],
         "space-before-blocks":"error",
         "quotes":["error","single"],
-        "curly":"error"
+        "curly":"error",
+        "no-unused-vars":"error"
     }
 }

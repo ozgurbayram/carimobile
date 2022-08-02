@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Modal, TextInput, ActivityIndicator } from 'react-native'
+import { View, Text, StyleSheet, Modal, TextInput, StatusBar } from 'react-native'
 import React, { useRef, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { AnimatedPress, CustomTextInput } from '../../components'
@@ -14,6 +14,7 @@ import { validateBarcode } from '../../utils/validations'
 import { AxiosResponse } from 'axios'
 import { useProducts } from '../../context/ProductContext'
 import LoadingComponent from '../../components/LoadingComponent'
+
 const CreateProduct = () => {
     const navigation = useNavigation<NativeStackNavigationProp<AppStackType>>()
     // states
@@ -51,10 +52,14 @@ const CreateProduct = () => {
     const createProduct = async()=>{
         setLoading(true)
         if(barcode && productName && productPrice) {
+            if(productPrice!='number') {
+                createError('Ürün fiyatı numerik olmalıdır')
+                productPriceRef.current?.clear()
+                productPriceRef.current?.focus()
+            }
             if(validateBarcode(barcode.toString())) {
                 const response:AxiosResponse = await create_product(productName,parseInt(productPrice),barcode)
                 if(response.status==200) {
-                    console.log(response.data);
                     productDispatch({type:'ADD_PRODUCT',product:response.data['product']})
                     navigation.navigate('Home')
                 }
@@ -68,13 +73,13 @@ const CreateProduct = () => {
         setLoading(false)
     }
 
-
     const onProductNameChange = (text:string)=>{setProductName(text)}
     const onProductPriceChange = (text:string)=>{setProductPrice(text)}
     const onBarcodeChange = (text:string)=>{setBarcode(text)}
-
+    
     return (
         <SafeAreaView style={{flex:1}}>
+            <StatusBar barStyle="dark-content" backgroundColor="#fff"/>
             <View style={styles.container}>
                 <View>
                     <AnimatedPress onPress={cancel} style={{height:32,width:32}}>
@@ -90,7 +95,7 @@ const CreateProduct = () => {
                     onSubmitEditing={()=>{productPriceRef.current?.focus()}}
                 />
                 <CustomTextInput
-                    value={productPrice}
+                    value={productPrice?productPrice:''}
                     placeholder='Ürün Fiyatı'
                     keyboardType='numeric'
                     onChangeText={onProductPriceChange}
@@ -148,7 +153,7 @@ const styles = StyleSheet.create({
     },
     submitButton:{
         height:55,
-        backgroundColor:'#333',
+        backgroundColor:'rgba(0,0,0,0.5)',
         alignItems:'center',
         justifyContent:'center',
         borderRadius:10

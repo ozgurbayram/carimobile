@@ -1,4 +1,3 @@
-import { ListRenderItemInfo, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import AnimatedPress from './AnimatedPress'
 import { Ionicons } from '@expo/vector-icons'
@@ -10,57 +9,61 @@ import { useProducts } from '../context/ProductContext';
 import { AxiosResponse } from 'axios';
 import { useError } from '../context/ErrorContext';
 import Animated, { SlideInRight, SlideOutLeft,Layout } from 'react-native-reanimated';
-type Product ={
-    name:string,
-    price:number,
-    barcode:string 
-}
-const ProductComponent = ({item}:ListRenderItemInfo<Product>) => {
+import { StyleSheet, Text, View } from 'react-native';
+import { useRef } from 'react';
+import { Product } from '../../types';
+import { useBasket } from '../context/BasketContext';
+
+const ProductComponent = ({
+    id,
+    barcode,
+    name,
+    price
+}:Product) => {
     const {token} = useAuth()
     const {productDispatch} = useProducts()
     const {createError} = useError()
+    const swipeableRef = useRef<Swipeable>()
     const deleteProduct = async()=>{
-        const res:AxiosResponse = await instance.delete(`/product/${item.barcode}`,{
+        const res:AxiosResponse = await instance.delete(`/product/${id}`,{
             headers:{
                 'Authorization':`Bearer ${token}`
             }
         })
         if(res.status==200) {
-            productDispatch({type:'DELETE_PRODUCT',id:item.barcode})
+            productDispatch({type:'DELETE_PRODUCT',id:id})
+            swipeableRef.current?.close()
         }else{
             createError(res.data['message'])
         }
     }
 
-    const renderLeftActions = (progress, dragX) => {
-        const trans = dragX.interpolate({
-            inputRange: [0, 50, 100, 101],
-            outputRange: [-20, 0, 0, 1],
-        });
+    const renderLeftActions = () => {
         return (
-            <RectButton style={styles.leftAction} onPress={deleteProduct}>
+            <RectButton style={[styles.leftAction]} onPress={deleteProduct}>
                 <Text>Delete</Text>
             </RectButton>
         );
     };
-
+    const {basketDispatch} = useBasket()
+    const add = () =>{
+        basketDispatch({type:'ADD_TO_BASKET',product:{id,barcode,name,price}})
+    } 
     return (
-        <Swipeable renderRightActions={renderLeftActions}>
+        <Swipeable renderRightActions={renderLeftActions} ref={swipeableRef}>
             <Animated.View style={styles.item} entering={SlideInRight} exiting={SlideOutLeft} layout={Layout}>
                 <View>
-
-                    <Text style={[styles.text,styles.first]}>İsim:{item.name}</Text>
-                    <Text style={styles.text}>Bakod:{item.barcode}</Text>
-                    <Text style={styles.text}>Fiyat:{item.price} TL</Text>
+                    <Text style={[styles.text]}>İsim:{name}</Text>
+                    <Text style={styles.text}>Bakod:{barcode}</Text>
+                    <Text style={styles.text}>Fiyat:{price} TL</Text>
                 </View>
-                <AnimatedPress style={styles.addButton}>
+                <AnimatedPress style={styles.addButton} onPress={add}>
                     <Ionicons name='cart' size={22} color="#fff" />
                 </AnimatedPress>
             </Animated.View>
         </Swipeable>
     )
 }
-
 
 const styles = StyleSheet.create({
     item:{

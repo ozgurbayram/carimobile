@@ -1,17 +1,16 @@
-import { createContext, ReactNode, useContext, useMemo, useReducer } from 'react';
-type Product = {
-    name:string
-    barcode:string,
-    price:number
-}
+// eslint-disable-next-line no-unused-vars
+import { createContext, ReactNode, useContext, useReducer } from 'react';
+import { Product } from '../../types';
 type State = {
     products:Product[] |null
 }
 type Action = 
     {type:'SET_PRODUCTS',products:Product[]} | 
     {type:'ADD_PRODUCT',product:Product} | 
-    {type:'DELETE_PRODUCT',id:string}
+    {type:'DELETE_PRODUCT',id:string}|
+    {type:'CLEAR'}
 
+// eslint-disable-next-line no-unused-vars
 type Dispatch = (action:Action)=>void 
 const ProductContext = createContext<{productState:State,productDispatch:Dispatch}>({
     productState:{
@@ -29,8 +28,7 @@ const productReducer = (state:State,action:Action)=>{
         }
     case 'DELETE_PRODUCT':
         if(state.products) {
-
-            const new_list = state.products.filter((i)=>{return i.barcode != action.id})    
+            const new_list = state.products.filter((i)=>{return i.id != action.id})    
             return {
                 ...state,
                 products:new_list
@@ -45,12 +43,18 @@ const productReducer = (state:State,action:Action)=>{
             }
         }
         return {...state}
+    case 'CLEAR':
+        return {
+            ...state,
+            products:null
+        }
     default:
         return {
             ...state
         }
     }
 }
+
 const ProductContextProvider = ({children}:{children:ReactNode}) =>{
     const [productState, productDispatch] = useReducer(productReducer, {products:null})
     const value = {productState,productDispatch}
