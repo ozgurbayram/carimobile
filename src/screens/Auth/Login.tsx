@@ -132,7 +132,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         height: 50,
-        borderRadius: 10,
     },
     buttonText: {
         color: '#fff',
@@ -142,7 +141,6 @@ const styles = StyleSheet.create({
         marginTop: 20,
         padding: 10,
         backgroundColor: '#3d63f4',
-        borderRadius: 6,
     },
     registerBtnText: {
         color: '#fff',

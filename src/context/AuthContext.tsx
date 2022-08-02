@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
+// eslint-disable-next-line no-unused-vars
 const AuthContext = createContext<{token:string|null,email:string|null,login:(token:string,email:string)=>void,logout:()=>void}>({
     login:()=>null,
     token:null,

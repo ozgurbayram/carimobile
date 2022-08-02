@@ -2,9 +2,10 @@ import { createContext, ReactNode, useContext, useState } from 'react';
 import { Text } from 'react-native';
 import Animated, { FadeInRight, FadeOutRight } from 'react-native-reanimated';
 
+// eslint-disable-next-line no-unused-vars
 const ErrorContext= createContext<{error:string|null,createError:(error:string)=>void}>({
     error:null,
-    createError:()=>{},
+    createError:()=>{null},
 })
 
 

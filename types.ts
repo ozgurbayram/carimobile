@@ -8,6 +8,8 @@ export type AppStackType = {
     CreateProduct:undefined
     SearchProduct:undefined
     Basket:undefined
+    Payment:undefined
+    CompleatedPayments:undefined
 }
 
 export type Product = {
@@ -16,4 +18,12 @@ export type Product = {
     barcode:string
     price:number
     count?:number
+}
+export type PaymentInfo = {
+    id: string
+    products:Product[],
+    amount:number,
+    created_at:Date,
+    companyName:string,
+    recipient:string
 }

@@ -1,19 +1,17 @@
 import { View, Text, StyleSheet, Modal, TextInput, StatusBar } from 'react-native'
 import React, { useRef, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { AnimatedPress, CustomTextInput } from '../../components'
 import { Ionicons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { AnimatedPress, CustomTextInput,LoadingComponent } from '../../components'
 import { AppStackType } from '../../../types'
-import { useError } from '../../context'
+import { useError,useProducts } from '../../context'
 import { BarCodeScanner,BarCodeScannerResult } from 'expo-barcode-scanner'
 import { create_product } from '../../services/product'
 import { allowedBarCodes } from '../../constants/barcodeTypes'
 import { validateBarcode } from '../../utils/validations'
 import { AxiosResponse } from 'axios'
-import { useProducts } from '../../context/ProductContext'
-import LoadingComponent from '../../components/LoadingComponent'
 
 const CreateProduct = () => {
     const navigation = useNavigation<NativeStackNavigationProp<AppStackType>>()
@@ -23,9 +21,9 @@ const CreateProduct = () => {
     const [productPrice, setProductPrice] = useState<string|null>(null)  
     const [loading, setLoading] = useState<boolean>(false)
     // references
-    const productNameRef = useRef<TextInput>()
-    const productPriceRef = useRef<TextInput>()
-    const barcodeRef = useRef<TextInput>()
+    const productNameRef = useRef<TextInput>(null)
+    const productPriceRef = useRef<TextInput>(null)
+    const barcodeRef = useRef<TextInput>(null)
 
     const cancel = ()=>{navigation.goBack()}
     const {createError} = useError()
@@ -52,11 +50,6 @@ const CreateProduct = () => {
     const createProduct = async()=>{
         setLoading(true)
         if(barcode && productName && productPrice) {
-            if(productPrice!='number') {
-                createError('Ürün fiyatı numerik olmalıdır')
-                productPriceRef.current?.clear()
-                productPriceRef.current?.focus()
-            }
             if(validateBarcode(barcode.toString())) {
                 const response:AxiosResponse = await create_product(productName,parseInt(productPrice),barcode)
                 if(response.status==200) {
@@ -74,7 +67,7 @@ const CreateProduct = () => {
     }
 
     const onProductNameChange = (text:string)=>{setProductName(text)}
-    const onProductPriceChange = (text:string)=>{setProductPrice(text)}
+    const onProductPriceChange = (text:string)=>{setProductPrice(text.replace(/[^0-9]/g, ''))}
     const onBarcodeChange = (text:string)=>{setBarcode(text)}
     
     return (
@@ -87,7 +80,6 @@ const CreateProduct = () => {
                     </AnimatedPress>
                 </View>
                 <CustomTextInput
-                    value={productName}
                     placeholder='Ürün ismi'
                     onChangeText={onProductNameChange}
                     autoFocus
@@ -147,16 +139,14 @@ const styles = StyleSheet.create({
         width:'15%',
         alignItems:'center',
         justifyContent:'center',
-        borderRadius:10,
         backgroundColor:'#eee',
         elevation:2
     },
     submitButton:{
         height:55,
-        backgroundColor:'rgba(0,0,0,0.5)',
+        backgroundColor:'#333',
         alignItems:'center',
         justifyContent:'center',
-        borderRadius:10
     }
 })
 export default CreateProduct

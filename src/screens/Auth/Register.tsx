@@ -1,20 +1,20 @@
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { AxiosResponse } from "axios";
-import React, { useRef, useState } from "react";
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { AxiosResponse } from 'axios';
+import React, { useRef, useState } from 'react';
 import {
     View,
     Text,
     TextInput,
     ActivityIndicator,
     StyleSheet,
-} from "react-native";
+} from 'react-native';
 
-import { AuthStackType } from "../../../types";
-import {AnimatedPress,CustomTextInput} from "../../components";
-import { useAuth ,useError} from "../../context/";
-import { register_user } from "../../services/auth";
-import { validateEmail, validatePassword } from "../../utils/validations";
+import { AuthStackType } from '../../../types';
+import {AnimatedPress,CustomTextInput} from '../../components';
+import { useAuth ,useError} from '../../context/';
+import { register_user } from '../../services/auth';
+import { validateEmail, validatePassword } from '../../utils/validations';
 
 const Register = () => {
     const navigation = useNavigation<NativeStackNavigationProp<AuthStackType>>()
@@ -53,41 +53,41 @@ const Register = () => {
             const isPasswordConfirmValid = validatePassword(passwordConfirm);
             if (isEmailValid && isPasswordValid && isPasswordConfirmValid) {
                 if (password == passwordConfirm) {
-                    const response: AxiosResponse = await register_user(
+                    const response:AxiosResponse = await register_user(
                         email,
                         password,
                         passwordConfirm
                     );
                     if (response.status === 400) {
                         setLoading(false);
-                        createError(response.data["message"]);
+                        createError(response.data['message']);
                     }
                     if (response.status === 200) {
                         setLoading(false);
-                        login(response.data["access-token"], response.data["email"]);
+                        login(response.data['access-token'], response.data['email']);
                     } else {
                         setLoading(false);
-                        createError(response.data["message"]);
+                        createError(response.data['message']);
                     }
                 } else {
                     setLoading(false);
-                    createError("Girilen şifreler uyuşmuyor");
+                    createError('Girilen şifreler uyuşmuyor');
                 }
             }
             // errors
             if (!isEmailValid) {
                 setLoading(false);
-                createError("Lütfen geçerli bir E-posta adresi giriniz");
+                createError('Lütfen geçerli bir E-posta adresi giriniz');
                 emailRef.current?.focus();
             }
             if (!isPasswordValid) {
                 setLoading(false);
-                createError("Lütfen geçerli bir şifre giriniz");
+                createError('Lütfen geçerli bir şifre giriniz');
                 passwordRef.current?.focus();
             }
             if (!isPasswordConfirmValid) {
                 setLoading(false);
-                createError("Lütfen geçerli bir şifre doğrulama giriniz");
+                createError('Lütfen geçerli bir şifre doğrulama giriniz');
                 passwordConfirmRef.current?.focus();
             }
         } else {
@@ -149,28 +149,26 @@ const Register = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff",
+        backgroundColor: '#fff',
         padding: 20,
     },
     button: {
-        backgroundColor: "#2089db",
-        alignItems: "center",
-        justifyContent: "center",
+        backgroundColor: '#2089db',
+        alignItems: 'center',
+        justifyContent: 'center',
         height: 50,
-        borderRadius: 10,
     },
     buttonText: {
-        color: "#fff",
+        color: '#fff',
     },
     registerBtn: {
-        alignSelf: "center",
+        alignSelf: 'center',
         marginTop: 20,
         padding: 10,
-        backgroundColor: "#3d63f4",
-        borderRadius: 6,
+        backgroundColor: '#3d63f4',
     },
     registerBtnText: {
-        color: "#fff",
+        color: '#fff',
     },
 });
 export default Register;

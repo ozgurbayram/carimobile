@@ -12,7 +12,6 @@ const CustomTextInput = React.forwardRef<TextInput,IProps>((props,ref)=>{
                 backgroundColor:'#eee',
                 marginVertical:20,
                 padding:10,
-                borderRadius:10,
                 height:65,
                 fontWeight:'600',
                 elevation:1,

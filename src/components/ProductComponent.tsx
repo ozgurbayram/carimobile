@@ -8,7 +8,7 @@ import { useAuth } from '../context/AuthContext';
 import { useProducts } from '../context/ProductContext';
 import { AxiosResponse } from 'axios';
 import { useError } from '../context/ErrorContext';
-import Animated, { SlideInRight, SlideOutLeft,Layout } from 'react-native-reanimated';
+import Animated, { Layout, FadeIn, FadeOut } from 'react-native-reanimated';
 import { StyleSheet, Text, View } from 'react-native';
 import { useRef } from 'react';
 import { Product } from '../../types';
@@ -23,7 +23,7 @@ const ProductComponent = ({
     const {token} = useAuth()
     const {productDispatch} = useProducts()
     const {createError} = useError()
-    const swipeableRef = useRef<Swipeable>()
+    const swipeableRef = useRef<Swipeable>(null)
     const deleteProduct = async()=>{
         const res:AxiosResponse = await instance.delete(`/product/${id}`,{
             headers:{
@@ -51,7 +51,7 @@ const ProductComponent = ({
     } 
     return (
         <Swipeable renderRightActions={renderLeftActions} ref={swipeableRef}>
-            <Animated.View style={styles.item} entering={SlideInRight} exiting={SlideOutLeft} layout={Layout}>
+            <Animated.View style={styles.item} entering={FadeIn} exiting={FadeOut} layout={Layout}>
                 <View>
                     <Text style={[styles.text]}>İsim:{name}</Text>
                     <Text style={styles.text}>Bakod:{barcode}</Text>
@@ -72,8 +72,6 @@ const styles = StyleSheet.create({
         alignItems:'center',
         justifyContent:'space-between',
         padding:20,
-        borderBottomColor:'#ddd',
-        borderBottomWidth:1,
         backgroundColor:'#fff'
     },
     text:{

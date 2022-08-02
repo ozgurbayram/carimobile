@@ -8,6 +8,8 @@ import SearchProduct from '../screens/App/SearchProduct'
 import Basket from '../screens/App/Basket'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useBasket } from '../context/BasketContext'
+import Payment from '../screens/App/Payment'
+import CompleatedPayments from '../screens/App/CompleatedPayments'
 const AppStack = createNativeStackNavigator<AppStackType>()
 
 const AppNavigation = () => {
@@ -44,6 +46,8 @@ const AppNavigation = () => {
             <AppStack.Screen name='CreateProduct' component={CreateProduct}/>
             <AppStack.Screen name='SearchProduct' component={SearchProduct}/>
             <AppStack.Screen name='Basket' component={Basket}/> 
+            <AppStack.Screen name='Payment' component={Payment}/>
+            <AppStack.Screen name='CompleatedPayments' component={CompleatedPayments}/>
         </AppStack.Navigator>
     )
 }

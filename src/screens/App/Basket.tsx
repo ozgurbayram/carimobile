@@ -2,9 +2,11 @@ import { Button, FlatList, ListRenderItemInfo, StatusBar, StyleSheet, Text, View
 import React, { useCallback } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useBasket } from '../../context/BasketContext'
-import { Product } from '../../../types'
-import { AnimatedPress } from '../../components'
+import { AppStackType, Product } from '../../../types'
+import { AnimatedPress, BasketHeader } from '../../components'
 import { Ionicons } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/native'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 const BasketProduct = React.memo(({
     barcode,
     id,
@@ -23,7 +25,7 @@ const BasketProduct = React.memo(({
     }  
     return( 
         <View style={styles.product} key={id}> 
-            <View style={styles.prodctLeft}>
+            <View>
                 <Text>Ürün: {name}</Text>
                 <Text>Barkod: {barcode}</Text>
                 <Text>Fiyat: {price}</Text>
@@ -42,7 +44,9 @@ const BasketProduct = React.memo(({
 })
 
 const Basket = () => {
-    const {basketState,basketDispatch} = useBasket()
+    const navigation = useNavigation<NativeStackNavigationProp<AppStackType>>()
+
+    const {basketState} = useBasket()
     const {basket} = basketState
     const calculateBasketTotal = useCallback(
         () => {
@@ -60,15 +64,18 @@ const Basket = () => {
     }
     if(!basket) {
         return(
-            <View style={styles.emptyScreen}>
-                <Text style={{fontSize:21}}>Sepetiniz boş</Text>
-            </View>
+            <SafeAreaView style={styles.emptyScreen}>
+                <BasketHeader/>
+                <Text style={{fontSize:21,alignSelf:'center',paddingTop:100}}>Sepetiniz boş</Text>
+            </SafeAreaView>
         )
     }
+
     return (
         <SafeAreaView style={{flex:1}}>
             <StatusBar barStyle="dark-content" backgroundColor="#fff"/>
             <View style={styles.container}>
+                <BasketHeader/>
                 <FlatList
                     showsVerticalScrollIndicator={false}
                     bounces={false}
@@ -82,7 +89,7 @@ const Basket = () => {
                 />
                 <View style={styles.bottom}>
                     <Text>Ödenecek Tutar: {calculateBasketTotal()}TL</Text>
-                    <Button title='Ödeme yap' onPress={()=>{basketDispatch({type:'CLEAR_BASKET'})}}/>
+                    <Button title='Ödeme yap' onPress={()=>{navigation.navigate('Payment')}}/>
                 </View>
             </View>
         </SafeAreaView>
@@ -138,6 +145,5 @@ const styles = StyleSheet.create({
         flex:1,
         backgroundColor:'#fff',
         alignItems:'center',
-        justifyContent:'center'
     }
 })

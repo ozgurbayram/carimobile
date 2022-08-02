@@ -1,4 +1,4 @@
-import { View, Text, ActivityIndicator, Modal } from 'react-native'
+import { View,  ActivityIndicator, Modal } from 'react-native'
 import React from 'react'
 
 const LoadingComponent = () => {
