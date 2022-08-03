@@ -4,11 +4,7 @@ import React from 'react'
 const AuthHeader = () => {
     return (
         <View style={styles.container}>
-            <Image source={require('../../assets/logo.png')} style={{
-                resizeMode:'center',
-                width:100,
-                alignSelf:'center'
-            }}/>
+            <Text style={styles.text}>CariApp</Text>
         </View>
     )
 }
@@ -20,6 +16,10 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         flexDirection:'column',
         backgroundColor:'#fff'
+    },
+    text:{
+        fontSize:24,
+        fontWeight:'bold'
     }
 })
 export default AuthHeader 
